@@ -5,6 +5,7 @@ import os
 import os.path
 from time import time
 from datetime import datetime
+import mimetypes
 
 class Wiki(object):
     documentsFolder = './documents'
@@ -12,9 +13,33 @@ class Wiki(object):
     
     @cherrypy.expose
     def documentList(self):
-        allDocuments = [{'name': x} for x in os.listdir(self.documentsFolder) if not x.startswith('.')]
+        allDocuments = []
+        
+        for document in (x for x in os.listdir(self.documentsFolder) if not x.startswith('.')):
+            name, date, ext = document.rsplit('.', 2)
+            allDocuments.append({
+                'name': document,
+                'shortname': "{}.{}".format(name, ext),
+                'date': date,
+                'editable': self.isDocumentEditable(document)
+            })
+        
         cherrypy.response.headers['Content-Type'] = "application/json"
         return json.dumps(allDocuments).encode('utf8')
+    
+    def isDocumentEditable(self, documentName):
+        _, ext = os.path.splitext(documentName)
+        return ext in ('.txt', '.md')
+        
+    @cherrypy.expose
+    def document(self, documentName):
+        guessedType = mimetypes.guess_type(documentName)
+        if guessedType is None:
+            guessedType = 'application/octet-stream'
+        
+        cherrypy.response.headers['Content-Type'] = guessedType[0]
+        filepath = os.path.join(self.documentsFolder, documentName)
+        return open(filepath, 'rb')
         
     @cherrypy.expose
     def uploadDocument(self, document):
@@ -29,6 +54,14 @@ class Wiki(object):
             f.write(data)
             
         raise cherrypy.HTTPRedirect('/')
+    
+    @cherrypy.expose
+    def readDocument(self):
+        pass
+    
+    @cherrypy.expose
+    def saveDocument(self):
+        pass
     
     @cherrypy.expose
     @cherrypy.tools.allow(methods=['POST'])
