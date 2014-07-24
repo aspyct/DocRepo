@@ -36,16 +36,24 @@ angular.module('wiki', [])
 		};
 	})
 	.controller('PreviewController', function ($scope, $rootScope, $sce) {
-		$scope.isImage = function (doc) {
+		var isImage = function (doc) {
 			return doc !== undefined && doc.mimetype && doc.mimetype.match(/^image\//) !== null;
 		};
 		
-		$scope.isPdf = function (doc) {
+		var isPdf = function (doc) {
 			return doc !== undefined && doc.mimetype === 'application/pdf';
 		}
 		
 		$scope.$on('previewDocument', function (event, doc) {
-			$scope.documentUrl = $sce.trustAsResourceUrl('document/' + doc.name);
+			if (isImage(doc)) {
+				$scope.documentType = 'image';
+			} else if (isPdf(doc)) {
+				$scope.documentType = 'pdf';
+			} else {
+				$scope.documentType = undefined;
+			}
+
 			$scope.doc = doc;
+			$scope.documentUrl = $sce.trustAsResourceUrl('document/' + doc.name);
 		});
 	});

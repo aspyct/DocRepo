@@ -68,6 +68,11 @@ class Wiki(object):
         cherrypy.response.headers['Content-Type'] = self.mimetype(documentName)
         filepath = os.path.join(self.documentsFolder, documentName)
         return open(filepath, 'rb')
+    
+    @cherrypy.expose
+    def download(self, documentName):
+        cherrypy.response.headers['Content-Disposition'] = 'attachment'
+        return self.document(documentName)
         
     @cherrypy.expose
     def uploadDocument(self, document):
@@ -82,14 +87,6 @@ class Wiki(object):
             f.write(data)
             
         raise cherrypy.HTTPRedirect('/')
-    
-    @cherrypy.expose
-    def readDocument(self):
-        pass
-    
-    @cherrypy.expose
-    def saveDocument(self):
-        pass
     
     @cherrypy.expose
     @cherrypy.tools.allow(methods=['POST'])

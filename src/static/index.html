@@ -60,7 +60,7 @@
 						<div ng-show="versionList">
 							<a href="#" ng-click="closeVersions()">back</a>
 							<ul>
-								<li ng-repeat="version in versionList">
+								<li ng-repeat="version in versionList | orderBy:'date':true">
 									<a href="#" ng-click="preview(version)">{{version.date}}</a>
 								</li>
 							</ul>
@@ -68,8 +68,11 @@
 					</div>
 				</div>
 				<div class="col-md-8" ng-controller="PreviewController">
-					<img ng-if="isImage(doc)" ng-src="document/{{doc.name}}"/>
-					<iframe ng-if="isPdf(doc)" ng-src="{{documentUrl}}"></iframe>
+					<div ng-if="doc" ng-switch on="documentType">
+						<img ng-switch-when="image" ng-src="document/{{doc.name}}"/>
+						<iframe ng-switch-when="pdf" ng-src="{{documentUrl}}"></iframe>
+						<a ng-switch-default href="download/{{doc.name}}">Download {{doc.shortname}} from {{doc.date}}</a>
+					</div>
 				</div>
 			</div>
 		</div>
