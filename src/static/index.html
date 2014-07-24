@@ -47,16 +47,25 @@
 							</div>
 						</form>
 					</div>
-					<ul ng-controller="DocumentListController">
-						<input ng-model="search.name">
-						<li ng-repeat="document in documentList | orderBy:'date':true | filter:search">
-							<span class="name">
-								<a ng-click="preview(document)" href="#">{{document.shortname}}</a>
-							</span>
-							<span class="date">{{document.date}}</span>
-							<a ng-show="document.editable" href="editDocument/{{document.name}}">edit</a>
-						</li>
-					</ul>
+					<div ng-controller="DocumentListController">
+						<ul ng-if="!versionList">
+							<input ng-model="search.name">
+							<li ng-repeat="document in documentList | orderBy:'date':true | filter:search">
+								<a href="#" ng-click="showVersions(document)">[versions]</a>
+								<span class="name">
+									<a ng-click="preview(document)" href="#">{{document.shortname}}</a>
+								</span>
+							</li>
+						</ul>
+						<div ng-if="versionList">
+							<a href="#" ng-click="closeVersions()">back</a>
+							<ul>
+								<li ng-repeat="version in versionList">
+									<a href="#" ng-click="preview(version)">{{version.date}}</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
 				<div class="col-md-8" ng-controller="PreviewController">
 					<img ng-if="isImage(doc)" ng-src="document/{{doc.name}}"/>

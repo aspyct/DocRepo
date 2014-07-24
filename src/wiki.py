@@ -11,22 +11,46 @@ class Wiki(object):
     documentsFolder = './documents'
     invoiceCounter = os.path.join(documentsFolder, '.invoiceCounter')
     
+    def listAllDocuments(self):
+        for document in (x for x in os.listdir(self.documentsFolder) if not x.startswith('.')):
+            name, date, ext = self.splitDocumentName(document)
+            yield "{}.{}".format(name, ext), document, date
+    
     @cherrypy.expose
     def documentList(self):
-        allDocuments = []
+        allDocuments = {}
         
-        for document in (x for x in os.listdir(self.documentsFolder) if not x.startswith('.')):
-            name, date, ext = document.rsplit('.', 2)
-            allDocuments.append({
-                'name': document,
-                'shortname': "{}.{}".format(name, ext),
-                'date': date,
-                'editable': self.isDocumentEditable(document),
-                'mimetype': self.mimetype(document)
-            })
+        for shortname, fullname, date in self.listAllDocuments():
+            if shortname not in allDocuments or allDocuments[shortname]['date'] < date:
+                allDocuments[shortname] = {
+                    'name': fullname,
+                    'shortname': shortname,
+                    'date': date,
+                    'mimetype': self.mimetype(shortname)
+                }
         
         cherrypy.response.headers['Content-Type'] = "application/json"
-        return json.dumps(allDocuments).encode('utf8')
+        return json.dumps(list(allDocuments.values())).encode('utf8')
+    
+    @cherrypy.expose
+    def documentVersions(self, documentShortName):
+        allVersions = []
+        
+        for shortName, fullname, date in self.listAllDocuments():
+            if shortName == documentShortName:
+                allVersions.append({
+                    'name': fullname,
+                    'shortname': shortName,
+                    'date': date,
+                    'mimetype': self.mimetype(shortName)
+                })
+        
+        cherrypy.response.headers['Content-Type'] = "application/json"
+        return json.dumps(allVersions).encode('utf8');
+    
+    def splitDocumentName(self, documentName):
+        name, date, ext = documentName.rsplit('.', 2)
+        return name, date, ext
     
     def mimetype(self, documentName):
         guessedType = mimetypes.guess_type(documentName)

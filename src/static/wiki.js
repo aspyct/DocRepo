@@ -11,6 +11,17 @@ angular.module('wiki', [])
 			$rootScope.$broadcast('previewDocument', doc);
 		};
 		
+		$scope.showVersions = function (doc) {
+			$http.get('documentVersions/' + doc.shortname)
+				.then(function (result) {
+					$scope.versionList = result.data;
+				})
+		};
+		
+		$scope.closeVersions = function () {
+			$scope.versionList = undefined;
+		}
+		
 		$scope.documentList = [];
 		$scope.reload();
 	})
@@ -26,7 +37,7 @@ angular.module('wiki', [])
 	})
 	.controller('PreviewController', function ($scope, $rootScope, $sce) {
 		$scope.isImage = function (doc) {
-			return doc !== undefined && doc.mimetype.match(/^image\//) != null;
+			return doc !== undefined && doc.mimetype && doc.mimetype.match(/^image\//) !== null;
 		};
 		
 		$scope.isPdf = function (doc) {
