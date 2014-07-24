@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Aspyct documents</title>
+		<title>Documents</title>
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.16/angular.min.js"></script>
@@ -9,6 +9,16 @@
 		<style>
 		body {
 			padding-top: 70px;
+		}
+		
+		iframe {
+			height: 500px;
+			width: 100%;
+		}
+		
+		img {
+			height: 500px;
+			width: 100%;
 		}
 		</style>
 	</head>
@@ -22,28 +32,36 @@
 		</div>
 		<div class="container">
 			<div class="row">
-				<div id="upload-doc" class="col-md-4">
-					<div id="invoice-counter"ß ng-controller="InvoiceCounterController">
-						<button ng-click="generateInvoiceNumber()">Generate invoice number</button>
+				<div class="col-md-4">
+					<div id="invoice-counter" ng-controller="InvoiceCounterController">
+						<button ng-click="generateInvoiceNumber()" class="btn btn-default">Generate invoice number</button>
 						<span>{{invoiceNumber}}</span>
 					</div>
 					<div>
-						<form method="post" action="uploadDocument" enctype="multipart/form-data">
-							<input type="file" name="document"/>
-							<input type="submit" value="Upload"/>
+						<form method="post" action="uploadDocument" enctype="multipart/form-data" class="form-inline">
+							<div class="form-group">
+								<input type="file" name="document" ng-model="selectedFile"/>
+							</div>
+							<div class="form-group">
+								<input type="submit" value="Upload" class="btn btn-default"/>
+							</div>
 						</form>
 					</div>
 					<ul ng-controller="DocumentListController">
-						<li ng-repeat="document in documentList | orderBy:'date':true">
+						<input ng-model="search.name">
+						<li ng-repeat="document in documentList | orderBy:'date':true | filter:search">
 							<span class="name">
-								<a target="preview" href="document/{{document.name}}">{{document.shortname}}</a>
+								<a ng-click="preview(document)" href="#">{{document.shortname}}</a>
 							</span>
 							<span class="date">{{document.date}}</span>
 							<a ng-show="document.editable" href="editDocument/{{document.name}}">edit</a>
 						</li>
 					</ul>
 				</div>
-				<iframe src="preview.html" class="col-md-8" id="preview"></iframe>
+				<div class="col-md-8" ng-controller="PreviewController">
+					<img ng-if="isImage(doc)" ng-src="document/{{doc.name}}"/>
+					<iframe ng-if="isPdf(doc)" ng-src="{{documentUrl}}"></iframe>
+				</div>
 			</div>
 		</div>
 	</body>

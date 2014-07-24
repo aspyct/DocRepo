@@ -21,11 +21,19 @@ class Wiki(object):
                 'name': document,
                 'shortname': "{}.{}".format(name, ext),
                 'date': date,
-                'editable': self.isDocumentEditable(document)
+                'editable': self.isDocumentEditable(document),
+                'mimetype': self.mimetype(document)
             })
         
         cherrypy.response.headers['Content-Type'] = "application/json"
         return json.dumps(allDocuments).encode('utf8')
+    
+    def mimetype(self, documentName):
+        guessedType = mimetypes.guess_type(documentName)
+        if guessedType is None:
+            guessedType = 'application/octet-stream'
+            
+        return guessedType[0]
     
     def isDocumentEditable(self, documentName):
         _, ext = os.path.splitext(documentName)
@@ -33,11 +41,7 @@ class Wiki(object):
         
     @cherrypy.expose
     def document(self, documentName):
-        guessedType = mimetypes.guess_type(documentName)
-        if guessedType is None:
-            guessedType = 'application/octet-stream'
-        
-        cherrypy.response.headers['Content-Type'] = guessedType[0]
+        cherrypy.response.headers['Content-Type'] = self.mimetype(documentName)
         filepath = os.path.join(self.documentsFolder, documentName)
         return open(filepath, 'rb')
         
