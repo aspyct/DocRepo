@@ -48,7 +48,7 @@
 						</form>
 					</div>
 					<div ng-controller="DocumentListController">
-						<ul ng-if="!versionList">
+						<ul ng-show="!versionList">
 							<input ng-model="search.name">
 							<li ng-repeat="document in documentList | orderBy:'date':true | filter:search">
 								<a href="#" ng-click="showVersions(document)">[versions]</a>
@@ -57,7 +57,7 @@
 								</span>
 							</li>
 						</ul>
-						<div ng-if="versionList">
+						<div ng-show="versionList">
 							<a href="#" ng-click="closeVersions()">back</a>
 							<ul>
 								<li ng-repeat="version in versionList">
