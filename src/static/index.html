@@ -34,10 +34,13 @@
 			<div class="row">
 				<div class="col-md-4">
 					<div id="invoice-counter" ng-controller="InvoiceCounterController">
-						<button ng-click="generateInvoiceNumber()" class="btn btn-default">Generate invoice number</button>
+						<h2>Invoice counter</h2>
+						<button ng-click="generateInvoiceNumber()" class="btn btn-default">Next number</button>
 						<span>{{invoiceNumber}}</span>
 					</div>
+					<hr/>
 					<div>
+						<h2>Upload a document</h2>
 						<form method="post" action="uploadDocument" enctype="multipart/form-data" class="form-inline">
 							<div class="form-group">
 								<input type="file" name="document" ng-model="selectedFile"/>
@@ -47,7 +50,9 @@
 							</div>
 						</form>
 					</div>
+					<hr/>
 					<div ng-controller="DocumentListController">
+						<h2>Documents</h2>
 						<ul ng-show="!versionList">
 							<input ng-model="search.name">
 							<li ng-repeat="document in documentList | orderBy:'date':true | filter:search">
