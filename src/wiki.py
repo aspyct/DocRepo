@@ -8,7 +8,6 @@ from datetime import datetime
 import mimetypes
 
 class Wiki(object):
-    
     def __init__(self, documentsFolder):
         self.documentsFolder = documentsFolder
         self.invoiceCounter = os.path.join(documentsFolder, '.invoiceCounter')
