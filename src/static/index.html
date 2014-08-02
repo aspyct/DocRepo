@@ -2,8 +2,9 @@
 <html>
 	<head>
 		<title>DocRepo</title>
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.16/angular.min.js"></script>
 		<script src="wiki.js"></script>
 		<style>
@@ -34,13 +35,13 @@
 			<div class="row">
 				<div class="col-md-4">
 					<div id="invoice-counter" ng-controller="InvoiceCounterController">
-						<h2>Invoice counter</h2>
+						<h2><i class="fa fa-money"></i> Invoice counter</h2>
 						<button ng-click="generateInvoiceNumber()" class="btn btn-default">Next number</button>
 						<span>{{invoiceNumber}}</span>
 					</div>
 					<hr/>
 					<div>
-						<h2>Upload a document</h2>
+						<h2><i class="fa fa-plus"></i> Upload document</h2>
 						<form method="post" action="uploadDocument" enctype="multipart/form-data" class="form-inline">
 							<div class="form-group">
 								<input type="file" name="document" ng-model="selectedFile"/>
@@ -52,7 +53,7 @@
 					</div>
 					<hr/>
 					<div ng-controller="DocumentListController">
-						<h2>Documents</h2>
+						<h2><i class="fa fa-archive"></i> Documents</h2>
 						<ul ng-show="!versionList">
 							<input ng-model="search.name">
 							<li ng-repeat="document in documentList | orderBy:'date':true | filter:search">
