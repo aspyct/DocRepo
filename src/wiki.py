@@ -8,8 +8,13 @@ from datetime import datetime
 import mimetypes
 
 class Wiki(object):
-    documentsFolder = './documents'
-    invoiceCounter = os.path.join(documentsFolder, '.invoiceCounter')
+    
+    def __init__(self, documentsFolder):
+        self.documentsFolder = documentsFolder
+        self.invoiceCounter = os.path.join(documentsFolder, '.invoiceCounter')
+        
+        if not os.path.isdir(self.documentsFolder):
+            os.mkdir(self.documentsFolder)
     
     def listAllDocuments(self):
         for document in (x for x in os.listdir(self.documentsFolder) if not x.startswith('.')):
@@ -108,4 +113,4 @@ class Wiki(object):
         
 
 if __name__ == '__main__':
-    cherrypy.quickstart(Wiki(), '', config='conf.ini')
+    cherrypy.quickstart(Wiki('./documents'), '', config='conf.ini')
