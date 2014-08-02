@@ -1,7 +1,12 @@
 DocRepo
 ===
 
-A small webapp that lets you store, preview and download documents. Also features an invoice counter for those of us who need it.
+A small webapp that lets you store, preview and download documents.
+
+It is designed to be very easy to run and backup.
+For example, you could store the documents on a folder that's backed up on dropbox or any other cloud solution.
+
+Also features an invoice counter for those of us who need it.
 
 How to run
 ---
