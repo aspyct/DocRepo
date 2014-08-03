@@ -9,7 +9,7 @@ import mimetypes
 
 class Wiki(object):
     def __init__(self, documentsFolder):
-        self.documentsFolder = documentsFolder
+        self.documentsFolder = os.path.abspath(documentsFolder)
         self.invoiceCounter = os.path.join(documentsFolder, '.invoiceCounter')
         
         if not os.path.isdir(self.documentsFolder):
@@ -70,8 +70,10 @@ class Wiki(object):
     @cherrypy.expose
     def document(self, documentName):
         cherrypy.response.headers['Content-Type'] = self.mimetype(documentName)
-        filepath = os.path.join(self.documentsFolder, documentName)
-        return open(filepath, 'rb')
+        filepath = os.path.abspath(os.path.join(self.documentsFolder, documentName))
+        
+        if filepath.startswith(self.documentsFolder):
+            return open(filepath, 'rb')
     
     @cherrypy.expose
     def download(self, documentName):
