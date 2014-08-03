@@ -21,6 +21,10 @@
 			height: 500px;
 			width: 100%;
 		}
+            
+        td {
+            padding: 0 10px;
+        }
 		</style>
 	</head>
 	<body ng-app="wiki">
@@ -54,15 +58,23 @@
 					<hr/>
 					<div ng-controller="DocumentListController">
 						<h2><i class="fa fa-archive"></i> Documents</h2>
-						<ul ng-show="!versionList">
-							<input ng-model="search.name">
-							<li ng-repeat="document in documentList | orderBy:'date':true | filter:search">
-								<a href="#" ng-click="showVersions(document)">[versions]</a>
-								<span class="name">
-									<a ng-click="preview(document)" href="#">{{document.shortname}}</a>
-								</span>
-							</li>
-						</ul>
+						<div ng-show="!versionList">
+							<input ng-model="search.name" placeholder="filter...">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Document</td>
+                                        <td><i class="fa fa-clock-o"></i></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="document in documentList | orderBy:'date':true | filter:search">
+                                        <td><a ng-click="preview(document)" href="#">{{document.shortname}}</a></td>
+                                        <td><a href="#" ng-click="showVersions(document)">[versions]</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+						</div>
 						<div ng-show="versionList">
 							<a href="#" ng-click="closeVersions()">back</a>
 							<ul>
