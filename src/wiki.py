@@ -114,4 +114,18 @@ class Wiki(object):
         
 
 if __name__ == '__main__':
-    cherrypy.quickstart(Wiki('./documents'), '', config='conf.ini')
+    documentsFolder = './documents'
+    staticdir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
+
+    config = {
+        'global': {
+            'server.socket_host': '127.0.0.1'
+        },
+        '/': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': staticdir,
+            'tools.staticdir.index': 'index.html'
+        }
+    }
+    
+    cherrypy.quickstart(Wiki(documentsFolder), '', config=config)
